@@ -28,11 +28,11 @@ $.modal = function(options) {
   const ANIMATION_SPEED = 200 //ms
   const $modal = _creatModal(options)
   let closing = false
-
+  let destroyed = false
   const modal = {
     open() {
-      if (closing) return // early exit
-
+      if ([closing, destroyed].includes(true)) return // early exit
+      console.log('test')
       $modal.classList.add('open')
     },
     close() {
@@ -56,7 +56,12 @@ $.modal = function(options) {
     }
   })
 
-  return modal
+  return Object.assign(modal, {
+    destroy() {
+      $modal.parentNode.removeChild($modal)
+      destroyed = true
+    }
+  })
 }
 
 
