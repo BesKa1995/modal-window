@@ -60,6 +60,7 @@ $.modal = function(options) {
   return Object.assign(modal, {
     destroy() {
       $modal.parentNode.removeChild($modal)
+      $modal.removeEventListener(listener)
       destroyed = true
     }
   })
