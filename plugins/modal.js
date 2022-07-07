@@ -1,4 +1,27 @@
-function _creatModal({ title, closable, content, width }) {
+function noop() {}
+function _createModalFooter(buttons = []) {
+  if (buttons.length === 0) {
+    return document.createElement('div')
+  }
+  const wrap = document.createElement('div')
+  wrap.classList.add('modal-footer')
+  buttons.forEach(btn => {
+    const $btn = document.createElement('button')
+    $btn.textContent = btn.text
+    $btn.classList.add('btn')
+    $btn.type = 'button'
+    $btn.classList.add(`btn-${btn.type || 'secondary'}`)
+    $btn.onclick = btn.handler || noop
+    wrap.appendChild($btn)
+  })
+  return wrap
+}
+
+Element.prototype.appendAfter = function(element) {
+  element.parentNode.insertBefore(this, element.nextSibling)
+}
+
+function _creatModal({ title, closable, content, width, footerButtons }) {
   const DEFAULT_WIDTH = '600px'
   const modal = document.createElement('div')
   modal.classList.add('bmodal')
@@ -14,15 +37,13 @@ function _creatModal({ title, closable, content, width }) {
         <div class="modal-body" data-content>
           ${content || ''}
           </div>
-          <div class="modal-footer">
-            <button>Ok</button>
-            <button>Cancel</button>
-          </div>
     </div>
       </div>
       </div>
     `)
   document.body.appendChild(modal)
+  const footer = _createModalFooter(footerButtons)
+  footer.appendAfter(modal.querySelector('[data-content]'))
   return modal
 }
 
@@ -65,6 +86,7 @@ $.modal = function(options) {
       $modal.removeEventListener(listener)
       destroyed = true
     },
+
     setContent(html = '') {
       $modal.querySelector('[data-content]').innerHTML = html
     }

@@ -70,4 +70,8 @@ html {
 
 body {
   font-size: 1.6rem;
+}
+
+button {
+  font-size: 1.6rem !important;
 }/*# sourceMappingURL=style.css.map */
