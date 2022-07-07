@@ -32,7 +32,6 @@ $.modal = function(options) {
   const modal = {
     open() {
       if ([closing, destroyed].includes(true)) return // early exit
-      console.log('test')
       $modal.classList.add('open')
     },
     close() {
@@ -50,11 +49,13 @@ $.modal = function(options) {
     }
   }
 
-  $modal.addEventListener('click', (event) => {
+  const listener = event => {
     if (event.target.dataset.close) {
       modal.close()
     }
-  })
+  }
+
+  $modal.addEventListener('click', listener)
 
   return Object.assign(modal, {
     destroy() {
