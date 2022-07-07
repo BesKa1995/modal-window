@@ -1,40 +1,38 @@
-function _creatModal(options) {
+function _creatModal({ title, closable, content, width }) {
+  const DEFAULT_WIDTH = '600px'
   const modal = document.createElement('div')
   modal.classList.add('bmodal')
   modal.insertAdjacentHTML('afterbegin', `
-      <div class="bmodal">
-        <div class="modal-overlay">
-          <div class="modal-window">
-            <div class="modal-header">
-              <span class="modal-title">Modal title</span>
-              <span class="modal-close">x</span>
-            </div <div class="modal-body">
-            <p>Lorem ipsum dolor sit amet.</p>
-            <p>Lorem ipsum dolor sit amet.</p>
-            <div class="modal-footer">
-              <button>Ok</button>
-              <button>Cancel</button>
-            </div>
+    <div class= "bmodal" >
+    <div class="modal-overlay">
+      <div class="modal-window" style="width: ${width || DEFAULT_WIDTH}">
+        <div class="modal-header">
+          <span class="modal-title">${title}</span>
+          ${closable ? `<span class="modal-close">&times;</span>` : ''}
+        </div < div class="modal-body">
+          ${content || ''}
+          <div class="modal-footer">
+            <button>Ok</button>
+            <button>Cancel</button>
           </div>
-        </div>
+        </>
       </div>
+    </div>
       </div>
-  `)
+    `)
   document.body.appendChild(modal)
   return modal
 }
 
-
-
 $.modal = function(options) {
-
-  const ANIMATION_SPEED = 2000 //ms
+  const ANIMATION_SPEED = 200 //ms
   const $modal = _creatModal(options)
 
   let closing = false
+
   return {
     open() {
-      if (closing) return // early exti
+      if (closing) return // early exit
 
       $modal.classList.add('open')
     },
@@ -50,7 +48,6 @@ $.modal = function(options) {
       }, ANIMATION_SPEED)
     },
     destroy() {
-
     }
   }
 }
