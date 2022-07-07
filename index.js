@@ -5,14 +5,14 @@ const cars = [
   { id: 3, title: 'BMW M6', price: 600000, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSsNi2dsjmX90fHNHZHxI6AIKfpbCwxTwcRw&usqp=CAU' },
 ]
 
-const toHTML = fruit => `
+const toHTML = car => `
 <div class="col">
   <div class="card" style="width: 18rem; height:25rem">
-    <img src="${fruit.img}" class="card-img-top" alt="${fruit.title}">
+    <img src="${car.img}" class="card-img-top" alt="${car.title}">
     <div class="card-body">
-      <h5 class="card-title">${fruit.title}</h5>
-      <a href="#" class="btn btn-primary" data-btn="price">See Price</a>
-      <a href="#" class="btn btn-danger">Delete</a>
+      <h5 class="card-title">${car.title}</h5>
+      <a href="#" class="btn btn-primary" data-btn="price" data-id="${car.id}">See Price</a>
+      <a href="#" class="btn btn-danger" data-btn="remove" data-id="${car.id}">Delete</a>
     </div>
   </div>
 </div>
@@ -20,38 +20,59 @@ const toHTML = fruit => `
 
 function render() {
   const html = cars.map(toHTML).join('')
-  document.querySelector('#fruits').innerHTML = html
+  document.querySelector('#cars').innerHTML = html
 }
 
 
 render()
-const modal = $.modal({
-  title: 'Vladilen Modal',
+const prcieModal = $.modal({
+  title: 'Price on the car',
   closable: true,
-  content: `
-     <h1>Modal is working</h1>
-     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla, sunt.</p>
-  `,
   width: '400px',
   footerButtons: [
     {
-      text: 'Ok', type: 'primary', handler() {
-        modal.close()
-      }
-    },
-    {
-      text: 'Close', type: 'danger', handler() {
-        modal.close()
+      text: 'close', type: 'primary', handler() {
+        prcieModal.close()
       }
     }
   ]
 })
 
+const confirm = $.modal({
+  title: 'Are you sure?',
+  closable: true,
+  width: '400px',
+  footerButtons: [
+    {
+      text: 'cancel', type: 'secondary', handler() {
+        confirm.close()
+      }
+    }, {
+      text: 'Delete', type: 'danger', handler() {
+        confirm.close()
+      }
+    }
+  ]
+})
+
+
+
 document.addEventListener('click', event => {
   event.preventDefault()
   const btnType = event.target.dataset.btn
+  const id = +event.target.dataset.id
+  const car = cars.find(car => car.id === id)
+
   if (btnType === 'price') {
-    modal.open()
+    prcieModal.open()
+    prcieModal.setContent(`
+      <p>Price ${car.title}: <strong>${car.price}$</strong></p>
+    `)
+  } else if (btnType == 'remove') {
+    confirm.setContent(`
+      <p>You are removing car: <strong>${car.title}</strong></p>
+    `)
+    confirm.open()
   }
 })
 
